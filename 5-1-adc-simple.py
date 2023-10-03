@@ -18,25 +18,18 @@ depth = 8
 def adc():
     i = 0
     GPIO.output(dac, d2b(i))
+    time.sleep(0.001)
     while GPIO.input(comp) == GPIO.LOW and i < 2 ** depth - 1:
         i += 1
         GPIO.output(dac, d2b(i))
+        time.sleep(0.001)
     return i
-
-def adc_fix():
-    n = 3
-    for i in range(n):
-        a = adc()
-        if a > 0:
-            return a
-        time.sleep(0.01)
-    return 0
 
 try:
     while True:
-        a = adc_fix()
+        a = adc()
         print('{}: {:.3f}V'.format(str(a).zfill(3), a / 2 ** depth * 3.3))
-        time.sleep(0.1)
+        # time.sleep(0.1)
 finally:
     GPIO.output(dac, GPIO.LOW)
     GPIO.output(troyka, GPIO.LOW)

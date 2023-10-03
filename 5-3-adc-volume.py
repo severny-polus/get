@@ -20,46 +20,20 @@ def b2d(b):
 
 depth = 8
 
-def adc_simple_():
-    i = 0
-    GPIO.output(dac, d2b(i))
-    while GPIO.input(comp) == GPIO.LOW and i < 2 ** depth - 1:
-        i += 1
-        GPIO.output(dac, d2b(i))
-    return i
-
-def adc_simple():
-    n = 3
-    for i in range(n):
-        a = adc_simple_()
-        if a > 0:
-            return a
-        time.sleep(0.01)
-    return 0
-
-def adc_sar_():
+def adc():
     value = [0] * depth
     for k in range(depth):
         value[k] = 1
         GPIO.output(dac, value)
+        time.sleep(0.001)
         if GPIO.input(comp) == GPIO.HIGH:
             value[k] = 0
-        time.sleep(0.001)
     d = b2d(value)
     return d
 
-def adc_sar():
-    n = 2
-    aa = [0] * n
-    for i in range(n):
-        aa[i] = adc_sar_()
-        time.sleep(0.01)
-    return sum(aa) // n
-
 try:
     while True:
-        a = adc_simple()
-        time.sleep(0.1)
+        a = adc()
         
         level = a // 32
         volume = [i <= level for i in range(8)]

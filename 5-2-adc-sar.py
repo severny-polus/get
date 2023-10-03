@@ -23,23 +23,15 @@ def adc():
     for k in range(depth):
         value[k] = 1
         GPIO.output(dac, value)
+        time.sleep(0.001)
         if GPIO.input(comp) == GPIO.HIGH:
             value[k] = 0
-        time.sleep(0.001)
     d = b2d(value)
     return d
 
-def adc_mean():
-    n = 2
-    aa = [0] * n
-    for i in range(n):
-        aa[i] = adc()
-        time.sleep(0.01)
-    return sum(aa) // n
-
 try:
     while True:
-        a = adc_mean()
+        a = adc()
         print('{}: {:.3f}V'.format(str(a).zfill(3), a / 2 ** depth * 3.3))
         time.sleep(0.1)
 finally:
