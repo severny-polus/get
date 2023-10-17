@@ -24,7 +24,7 @@ def adc():
     for k in range(depth):
         value[k] = 1
         GPIO.output(dac, value)
-        time.sleep(0.001)
+        time.sleep(0.005)
         if GPIO.input(comp) == GPIO.HIGH:
             value[k] = 0
     d = b2d(value)
@@ -36,12 +36,11 @@ def decimal2volts(d):
 def adc_volts():
     return decimal2volts(adc())
 
-vmax = 224
-
-data = []
+vmax = 207
 
 try:
     # Ход эксперимента
+    data = []
     t = time.time()
     GPIO.output(troyka, GPIO.HIGH)
     down = False
@@ -59,11 +58,11 @@ try:
     # Определение и вывод параметров
     T = time.time() - t
     dt = T / len(data)
-    f = 1 / dt
+    F = 1 / dt
     dv = decimal2volts(1)
     print('длительность эксперимента:', T, 'с')
     print('период измерения:', dt, 'с')
-    print('частота дискретизации:', f, 'Гц')
+    print('частота дискретизации:', F, 'Гц')
     print('шаг квантования:', dv, 'В')
     
     # Запись данных в файлы
@@ -72,7 +71,7 @@ try:
             f.write(str(v) + '\n')
             
     with open('settings.txt', 'w') as f:
-        f.write('f=' + str(f) + '\n')
+        f.write('f=' + str(F) + '\n')
         f.write('dv=' + str(dv) + '\n')
     
     # Построение графика
@@ -80,6 +79,7 @@ try:
     plt.plot(data, zorder=2)
     plt.xlabel('номер измерения')
     plt.ylabel('напряжение на конденсаторе, В')
+    plt.show()
     plt.savefig('plot.png')
     
 finally:

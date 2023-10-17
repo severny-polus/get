@@ -1,2 +1,2 @@
-f=<_io.TextIOWrapper name='settings.txt' mode='w' encoding='UTF-8'>
+f=24.10486866016549
 dv=0.012941176470588235
