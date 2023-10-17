@@ -36,11 +36,12 @@ def decimal2volts(d):
 def adc_volts():
     return decimal2volts(adc())
 
-vmax = 207
+vmax = 224
 
 data = []
 
 try:
+    # Ход эксперимента
     t = time.time()
     GPIO.output(troyka, GPIO.HIGH)
     down = False
@@ -54,6 +55,8 @@ try:
         volts = decimal2volts(value)
         data.append(volts)
         print('{:.3f}V'.format(volts))
+        
+    # Определение и вывод параметров
     T = time.time() - t
     dt = T / len(data)
     f = 1 / dt
@@ -63,14 +66,16 @@ try:
     print('частота дискретизации:', f, 'Гц')
     print('шаг квантования:', dv, 'В')
     
+    # Запись данных в файлы
     with open('data.txt', 'w') as f:
         for v in data:
             f.write(str(v) + '\n')
             
     with open('settings.txt', 'w') as f:
-        f.write('dt=' + str(dt) + '\n')
+        f.write('f=' + str(f) + '\n')
         f.write('dv=' + str(dv) + '\n')
     
+    # Построение графика
     plt.grid(color='lightgray', zorder=1)
     plt.plot(data, zorder=2)
     plt.xlabel('номер измерения')
